@@ -6,7 +6,6 @@ import os
 from time import gmtime
 
 
-
 ## sample streams
 
 url1 = "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"
@@ -24,12 +23,13 @@ mission.set('')
 time = tk.IntVar()
 time.set('')
 log = tk.StringVar()
+duration = tk.StringVar()
+duration.set('10 mins')
 
 
 options = ['30 secs', '60 secs', '5 mins', '10 mins', '30 mins']
-options_sec = {'30 secs':30, '60 secs':60, '5 mins':300, '10 mins':60, '30 mins':1800}
-duration = tk.StringVar()
-duration.set('10 mins')
+options_sec = {'30 secs':30, '60 secs':60, '5 mins':300, '10 mins':600, '30 mins':1800}
+
 
 record_label = ['Not Recording', 'Recording']
 record = False
@@ -79,19 +79,22 @@ def join_btn_pressed():
 
 def search_btn_pressed():
 
-	files = os.listdir(mission.get())
+	try:
+		files = os.listdir(mission.get())
 
-	for i in range(len(files)):
-	    
-	    if files[i][-10] == '-':
-	        files[i] = files[i][:-11]+'0'+files[i][-10:]
+		for i in range(len(files)):
+		    
+		    if files[i][-10] == '-':
+		        files[i] = files[i][:-11]+'0'+files[i][-10:]
 
-	files = sorted(files, key=lambda x: int(x[-10:-4]))
+		files = sorted(files, key=lambda x: int(x[-10:-4]))
 
-	for i in range(len(files)):
-	    if int(files[i][-10:-4]) < time.get() < int(files[i + 1][-10:-4]):
-	        subprocess.Popen(['vlc', f'{mission.get()}/{files[i]}'])
-	        break
+		for i in range(len(files)):
+		    if int(files[i][-10:-4]) < time.get() < int(files[i + 1][-10:-4]):
+		        subprocess.Popen(['vlc', f'{mission.get()}/{files[i]}'])
+		        break
+	except:
+		pass
 
 def log_btn_pressed():
 
