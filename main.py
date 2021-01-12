@@ -26,7 +26,6 @@ log = tk.StringVar()
 duration = tk.StringVar()
 duration.set('10 mins')
 
-
 options = ['30 secs', '60 secs', '5 mins', '10 mins', '30 mins']
 options_sec = {'30 secs':30, '60 secs':60, '5 mins':300, '10 mins':600, '30 mins':1800}
 
