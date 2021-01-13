@@ -26,6 +26,7 @@ log = tk.StringVar()
 duration = tk.StringVar()
 duration.set('10 mins')
 
+
 options = ['30 secs', '60 secs', '5 mins', '10 mins', '30 mins']
 options_sec = {'30 secs':30, '60 secs':60, '5 mins':300, '10 mins':600, '30 mins':1800}
 
@@ -45,16 +46,17 @@ def start_stop_pressed():
 		if not os.path.exists(mission.get()):
 			os.makedirs(mission.get())
 
-		label3.config(bg='green', text=record_label[1])
-		record = True
-		window.update()
 		subprocess.Popen(f"ffmpeg -re -i {url1} -c copy -movflags +empty_moov+separate_moof -f\
 		 stream_segment -segment_time {seconds} -segment_atclocktime 1 -reset_timestamps 1 -strftime 1\
 		  '{mission.get()}-%H%M%S.mp4'", shell=True, cwd=f'{mission.get()}')
+
+		label3.config(bg='green', fg='gray0', text=record_label[1])
+		record = True
+		window.update()
 	
 	else:
 
-		label3.config(bg='salmon', text=record_label[0])
+		label3.config(bg='red', fg='white', text=record_label[0])
 		record = False
 		window.update()
 		subprocess.Popen('pkill -15 ffmpeg', shell=True)
@@ -72,7 +74,7 @@ def join_btn_pressed():
 
 	try:
 		subprocess.Popen(f'for i in *.mp4; do echo file $i >> files.txt; done', shell=True, cwd=f'{mission.get()}')
-		subprocess.Popen(f'ffmpeg -f concat -i files.txt -c copy out.mp4', shell=True, cwd=f'{mission.get()}')
+		subprocess.Popen(f'ffmpeg -f concat -i files.txt -c copy {mission.get()}.mp4', shell=True, cwd=f'{mission.get()}')
 	except:
 		pass
 
@@ -81,12 +83,18 @@ def search_btn_pressed():
 	try:
 		files = os.listdir(mission.get())
 
+		files = [i for i in files if i.endswith('.mp4')]
+		files = [i for i in files if not i == f'{mission.get()}.mp4']
+		print(files)
+
 		for i in range(len(files)):
 		    
 		    if files[i][-10] == '-':
 		        files[i] = files[i][:-11]+'0'+files[i][-10:]
 
+		print(files)
 		files = sorted(files, key=lambda x: int(x[-10:-4]))
+		print(files)
 
 		for i in range(len(files)):
 		    if int(files[i][-10:-4]) < time.get() < int(files[i + 1][-10:-4]):
@@ -103,8 +111,8 @@ def log_btn_pressed():
 	if not os.path.exists(mission.get()):
 			os.makedirs(mission.get())
 
-	subprocess.Popen(f"echo '{gmtime()[3]}:{gmtime()[4]}:{gmtime()[5]}z - {log.get()}' >> {mission.get()}/mission_log.txt ", shell=True)
-	subprocess.Popen(f"echo  >> {mission.get()}/mission_log.txt", shell=True)
+	subprocess.Popen(f"echo '{gmtime()[3]}:{gmtime()[4]}:{gmtime()[5]}z - {log.get()}' >> {mission.get()}/{mission.get()}_log.txt ", shell=True)
+	subprocess.Popen(f"echo  >> {mission.get()}/{mission.get()}_log.txt", shell=True)
 	log.set('')
 	
 	
@@ -126,7 +134,7 @@ set_duration.grid(row=1, column=1)
 start_stop_btn = tk.Button(window, text='Start/Stop Recording',command=start_stop_pressed, font=('arial', 14), highlightbackground='gray90')
 start_stop_btn.grid(row=2, column=0, padx=(5,5))
 
-label3 = tk.Label(window, font=('arial', 14), text=record_label[0], background='pink')
+label3 = tk.Label(window, font=('arial', 14), text=record_label[0], background='red', fg='white')
 label3.grid(row=2, column=1, sticky='EW', padx=(5,5))
 
 time_search_btn = tk.Button(window, text='Search Time', command=search_btn_pressed,font=('arial', 14), highlightbackground='gray90')
