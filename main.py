@@ -5,14 +5,17 @@ import subprocess
 import os
 from time import gmtime
 
+from config_file import *
+
 
 ## sample streams
 
-url1 = "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"
-url2 = "udp://127.0.0.1:1234"
+# stream1 = "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"
+# stream2 = "udp://127.0.0.1:1234"
 
 ## code
 
+os.chdir(working_dir)
 window = tk.Tk()
 window.resizable(False, False)
 window.title('Mission Recorder')
@@ -46,7 +49,7 @@ def start_stop_pressed():
 		if not os.path.exists(mission.get()):
 			os.makedirs(mission.get())
 
-		subprocess.Popen(f"ffmpeg -re -i {url1} -c copy -movflags +empty_moov+separate_moof -f\
+		subprocess.Popen(f"ffmpeg -re -i {stream1} -c copy -movflags +empty_moov+separate_moof -f\
 		 stream_segment -segment_time {seconds} -segment_atclocktime 1 -reset_timestamps 1 -strftime 1\
 		  '{mission.get()}-%H%M%S.mp4'", shell=True, cwd=f'{mission.get()}')
 
