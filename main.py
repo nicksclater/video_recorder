@@ -11,11 +11,9 @@ from config_file import *
 ## code
 
 try:
-
-	os.chdir(working_dir)
-
+	subprocess.os.chdir(working_dir)
 except:
-	os.chdir(alt_working_dir)
+	subprocess.os.chdir(alt_working_dir)
 
 window = tk.Tk()
 window.resizable(False, False)
@@ -48,7 +46,7 @@ def start_stop_pressed():
 	if not record:
 
 		if not os.path.exists(mission.get()):
-			os.makedirs(mission.get())
+			subprocess.os.makedirs(mission.get())
 
 		subprocess.Popen(f"ffmpeg -re -i {stream1} -c copy -movflags +empty_moov+separate_moof -f\
 		 stream_segment -segment_time {seconds} -segment_atclocktime 1 -reset_timestamps 1 -strftime 1\
@@ -68,7 +66,7 @@ def start_stop_pressed():
 def view_btn_pressed():
 
 	try:
-		video_file = filedialog.askopenfilename(initialdir=f'/Users/nicksclater/Desktop/{mission.get()}',filetypes=[("video clip", "*mp4")])
+		video_file = filedialog.askopenfilename(initialdir=f'~/Desktop/{mission.get()}',filetypes=[("video clip", "*mp4")])
 		if video_file != '':
 			subprocess.Popen(['vlc', video_file])
 	except:
@@ -113,8 +111,8 @@ def log_btn_pressed():
 	if mission.get() == '':
 		mission.set('mission')
 
-	if not os.path.exists(mission.get()):
-			os.makedirs(mission.get())
+	if not subprocess.os.path.exists(mission.get()):
+			subprocess.os.makedirs(mission.get())
 
 	subprocess.Popen(f"echo '{log_time}z - {log.get()}' >> {mission.get()}/{mission.get()}_log.txt ", shell=True)
 	subprocess.Popen(f"echo  >> {mission.get()}/{mission.get()}_log.txt", shell=True)
