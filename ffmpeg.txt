@@ -1,0 +1,11 @@
+
+streaming
+
+ffmpeg -i test.mp4 -v 0 -vcodec mpeg4 -f mpegts udp://127.0.0.1:1234
+
+recieving
+
+
+ffmpeg -re -i https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4 -c copy -movflags +empty_moov+separate_moof -f stream_segment -segment_time 20 -segment_atclocktime 1 -reset_timestamps 1 -strftime 1 %H%M%S.mp4
+
+
