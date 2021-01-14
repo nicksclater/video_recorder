@@ -10,7 +10,13 @@ from config_file import *
 
 ## code
 
-os.chdir(working_dir)
+try:
+
+	os.chdir(working_dir)
+
+except:
+	os.chdir(alt_working_dir)
+
 window = tk.Tk()
 window.resizable(False, False)
 window.title('Mission Recorder')
