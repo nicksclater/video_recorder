@@ -3,15 +3,10 @@ import tkinter as tk
 from tkinter import filedialog
 import subprocess
 import os
-from time import gmtime
+from time import strftime
 
 from config_file import *
 
-
-## sample streams
-
-# stream1 = "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"
-# stream2 = "udp://127.0.0.1:1234"
 
 ## code
 
@@ -23,8 +18,8 @@ window.configure(background='gray90')
 
 mission = tk.StringVar()
 mission.set('')
-time = tk.IntVar()
-time.set('')
+sch_time = tk.IntVar()
+sch_time.set('')
 log = tk.StringVar()
 duration = tk.StringVar()
 duration.set('10 mins')
@@ -100,7 +95,7 @@ def search_btn_pressed():
 		print(files)
 
 		for i in range(len(files)):
-		    if int(files[i][-10:-4]) < time.get() < int(files[i + 1][-10:-4]):
+		    if int(files[i][-10:-4]) < sch_time.get() < int(files[i + 1][-10:-4]):
 		        subprocess.Popen(['vlc', f'{mission.get()}/{files[i]}'])
 		        break
 	except:
@@ -108,17 +103,19 @@ def search_btn_pressed():
 
 def log_btn_pressed():
 
+	log_time = strftime('%H:%M:%Sz')
 	if mission.get() == '':
 		mission.set('mission')
 
 	if not os.path.exists(mission.get()):
 			os.makedirs(mission.get())
 
-	subprocess.Popen(f"echo '{gmtime()[3]}:{gmtime()[4]}:{gmtime()[5]}z - {log.get()}' >> {mission.get()}/{mission.get()}_log.txt ", shell=True)
+	subprocess.Popen(f"echo '{log_time}z - {log.get()}' >> {mission.get()}/{mission.get()}_log.txt ", shell=True)
 	subprocess.Popen(f"echo  >> {mission.get()}/{mission.get()}_log.txt", shell=True)
 	log.set('')
 	
-	
+strftime('%H:%M:%Sz')	
+
 ## GUI design
 
 label1 = tk.Label(window, font=('arial', 14), text='Enter Mission ID:', background='gray90')
@@ -143,7 +140,7 @@ label3.grid(row=2, column=1, sticky='EW', padx=(5,5))
 time_search_btn = tk.Button(window, text='Search Time', command=search_btn_pressed,font=('arial', 14), highlightbackground='gray90')
 time_search_btn.grid(row=3, column=0, sticky='EW', padx=(5,5))
 
-time_ent = tk.Entry(window, textvariable=time, font=('arial', 14), justify='center', highlightbackground='gray90')
+time_ent = tk.Entry(window, textvariable=sch_time, font=('arial', 14), justify='center', highlightbackground='gray90')
 time_ent.grid(row=3, column=1, padx=(5,5))
 
 view_btn = tk.Button(window, text='View Clip', command=view_btn_pressed, font=('arial', 14), highlightbackground='gray90')
