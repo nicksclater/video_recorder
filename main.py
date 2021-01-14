@@ -1,7 +1,7 @@
 
 import tkinter as tk
 from tkinter import filedialog
-import subprocessls
+import subprocess
 from time import strftime
 
 from config_file import *
